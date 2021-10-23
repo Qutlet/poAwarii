@@ -14,6 +14,7 @@ import java.util.Collection;
 public class User {
 
     @Id
+    @Column(name = "userID")
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
@@ -30,6 +31,8 @@ public class User {
     private String email;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
+
+    private String phoneNumber;
 
     @Column(name = "enabled")
     private boolean enabled;
@@ -92,5 +95,13 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

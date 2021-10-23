@@ -55,9 +55,8 @@ public class AuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        CustomUserDetails userDetails = null;
         User user =  userRepository.findByEmail(jsonWebToken.extractUsernameFromJsonWebToken(token));
-        userDetails = new CustomUserDetails(user);
+        CustomUserDetails userDetails = new CustomUserDetails(user);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);

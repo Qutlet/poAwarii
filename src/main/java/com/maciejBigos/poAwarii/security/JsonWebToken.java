@@ -1,5 +1,6 @@
 package com.maciejBigos.poAwarii.security;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.maciejBigos.poAwarii.user.CustomUserDetails;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -7,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.security.interfaces.ECKey;
 import java.util.Date;
 
 @Component
@@ -19,6 +19,7 @@ public class JsonWebToken {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         return Jwts.builder()
+                .setId(userDetails.getId())
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + 3600000))
@@ -32,7 +33,9 @@ public class JsonWebToken {
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey("some secret code, hope it never leaks").parseClaimsJws(authToken);
+            if(!Jwts.parser().setSigningKey("some secret code, hope it never leaks").parseClaimsJws(authToken).getBody().getExpiration().after(new Date())){
+                return false;
+            }
             return true;
         } catch (SignatureException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
@@ -42,6 +45,8 @@ public class JsonWebToken {
             logger.error("JWT token is unsupported: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
+        } catch (TokenExpiredException e) {
+            logger.error("JWT expired: {}", e.getMessage());
         }
 
         return false;

@@ -2,6 +2,8 @@ package com.maciejBigos.poAwarii.malfunction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ public class MalfunctionController {
 
     @PostMapping(path = "/malfunctions", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity addMalfunction(@RequestBody Malfunction malfunction) {
+
         malfunctionService.addMalfunction(malfunction);
         return ResponseEntity.ok("Malfunction created successfully");
     }
