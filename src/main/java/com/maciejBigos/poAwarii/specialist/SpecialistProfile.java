@@ -8,31 +8,34 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class SpecialistAdvert {
+public class SpecialistProfile {
 
     @SequenceGenerator(
-            name = "specialistAdvert_sequence",
-            sequenceName = "specialistAdvert_sequence",
+            name = "specialistProfile_sequence",
+            sequenceName = "specialistProfile_sequence",
             allocationSize = 1
     )
     @Id
-    @Column(name = "specialistAdvert_sequenceID")
+    @Column(name = "specialistProfileID")
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "specialistAdvert_sequence"
+            generator = "specialistProfile_sequence"
     )
     private Long id;
     /**
-     * Advert fields
+     * Profile fields
      */
-    private String advertName;
+    private Long userID;
+    private String customProfileName;
     @ElementCollection
     private List<String> categories = new ArrayList<>();
     /**
      * User data field, consider delete this section
      */
-    private String specialistFirstName; // Same as userFirstName
+    private String firstName; // Same as userFirstName
     private String lastName; // Same as userLastName
     private String email; // Same as userEmail
     private String phoneNumber; // Same as userPhoneNumber
+
+    //todo photo gallery
 }
