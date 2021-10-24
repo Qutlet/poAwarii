@@ -4,6 +4,7 @@ import com.maciejBigos.poAwarii.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -30,8 +31,10 @@ public class Malfunction {
 //    @MapsId
 //    @JoinColumn(name = "userID", nullable = true)
 //    private User specialist;
-    private Long creatorID;
-    private Long specialistID;
+    private String creatorID;
+    private String specialistID;
+    @ElementCollection
+    private List<String> specialistIDs = new ArrayList<>(); // lista spec ktorzy deklaruja sie podjac zadania, oczekuja na akceptacje uzytkownika
     private String name;
     private String description;
     @ElementCollection
@@ -63,7 +66,7 @@ public class Malfunction {
 //    }
 
 
-    public Malfunction(Long creatorID, String name, String description, List<String> categories, String location, String phoneNumber, String email) {
+    public Malfunction(String creatorID, String name, String description, List<String> categories, String location, String phoneNumber, String email) {
         this.creatorID = creatorID;
         this.name = name;
         this.description = description;
@@ -129,19 +132,44 @@ public class Malfunction {
         this.email = email;
     }
 
-    public Long getCreatorID() {
+    public String getCreatorID() {
         return creatorID;
     }
 
-    public void setCreatorID(Long creatorID) {
+    public void setCreatorID(String creatorID) {
         this.creatorID = creatorID;
     }
 
-    public Long getSpecialistID() {
+    public String getSpecialistID() {
         return specialistID;
     }
 
-    public void setSpecialistID(Long specialistID) {
+    public void setSpecialistID(String specialistID) {
         this.specialistID = specialistID;
+    }
+
+    public List<String> getSpecialistIDs() {
+        return specialistIDs;
+    }
+
+    public void setSpecialistIDs(List<String> specialistIDs) {
+        this.specialistIDs = specialistIDs;
+    }
+
+    public boolean addSpecialistID(String aLong) {
+        return specialistIDs.add(aLong);
+    }
+
+    public boolean addAll(Collection<? extends String> c) {
+        return categories.addAll(c);
+    }
+
+    public Malfunction clearInterested() {
+        specialistIDs.clear();
+        return this;
+    }
+
+    public boolean remove(Object o) {
+        return specialistIDs.remove(o);
     }
 }

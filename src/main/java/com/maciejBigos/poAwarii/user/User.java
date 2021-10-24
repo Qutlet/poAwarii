@@ -37,6 +37,9 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
 
+    @Column(name = "isSpecialist")
+    private boolean isSpecialist = false;
+
     public User() {
         this.enabled = false;
     }
@@ -104,4 +107,22 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public boolean isSpecialist() {
+        return isSpecialist;
+    }
+
+    public void setSpecialist(boolean specialist) {
+        isSpecialist = specialist;
+    }
+
+    public boolean add(Role role) {
+        return roles.add(role);
+    }
+
+    public boolean remove(Object o) {
+        return roles.remove(o);
+    }
+
+
 }

@@ -39,8 +39,7 @@ public class UserService implements UserDetailsService {
         user.setLastName(userDto.getLastName());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEmail(userDto.getEmail());
-        userRepository.save(user);
-        return user;
+        return userRepository.save(user);
     }
 
     private boolean emailExist(String email) {
@@ -54,6 +53,20 @@ public class UserService implements UserDetailsService {
         }
         });
         return cos.get();
+    }
+
+    public User makeUserSpecialist(String id){
+        User user = userRepository.getById(id);
+        user.setSpecialist(true);
+        user.add(new Role("SPEC"));
+        return userRepository.save(user);
+    }
+
+    public User unmakeUserSpecialist(String username){
+        User user = userRepository.findByEmail(username);
+        user.setSpecialist(false);
+        user.remove(new Role("SPEC"));
+        return userRepository.save(user);
     }
 
     @Override
