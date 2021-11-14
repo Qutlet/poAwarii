@@ -1,4 +1,4 @@
-package com.maciejBigos.poAwarii.user;
+package com.maciejBigos.poAwarii.help;
 
 public class UserAlreadyExistException extends Exception {
 

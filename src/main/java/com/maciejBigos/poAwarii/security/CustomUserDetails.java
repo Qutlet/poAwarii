@@ -1,11 +1,11 @@
-package com.maciejBigos.poAwarii.user;
+package com.maciejBigos.poAwarii.security;
 
+import com.maciejBigos.poAwarii.role.Role;
+import com.maciejBigos.poAwarii.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 public class CustomUserDetails implements UserDetails {
 

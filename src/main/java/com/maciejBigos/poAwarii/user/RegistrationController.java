@@ -1,5 +1,8 @@
 package com.maciejBigos.poAwarii.user;
 
+import com.maciejBigos.poAwarii.help.UserAlreadyExistException;
+import com.maciejBigos.poAwarii.role.RoleLevel;
+import com.maciejBigos.poAwarii.role.RoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +15,11 @@ public class RegistrationController {
 
     private final UserService userService;
 
-    public RegistrationController(UserService userService) {
+    private final RoleService roleService;
+
+    public RegistrationController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @PostMapping(value = "/registration", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -21,7 +27,7 @@ public class RegistrationController {
         User user;
         try {
             user = userService.registerNewUser(userDto);
-            
+            roleService.addRoleToUser(user.getId(), RoleLevel.USER);
         } catch (UserAlreadyExistException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

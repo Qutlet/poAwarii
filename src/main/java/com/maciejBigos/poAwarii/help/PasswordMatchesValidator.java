@@ -1,4 +1,6 @@
-package com.maciejBigos.poAwarii.user;
+package com.maciejBigos.poAwarii.help;
+
+import com.maciejBigos.poAwarii.user.UserDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

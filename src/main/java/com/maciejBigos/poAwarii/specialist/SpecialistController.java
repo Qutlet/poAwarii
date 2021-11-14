@@ -1,8 +1,13 @@
 package com.maciejBigos.poAwarii.specialist;
 
+import com.maciejBigos.poAwarii.role.RoleLevel;
+import com.maciejBigos.poAwarii.role.RoleService;
+import com.maciejBigos.poAwarii.security.AuthenticationService;
+import com.maciejBigos.poAwarii.user.User;
 import com.maciejBigos.poAwarii.user.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -18,16 +23,23 @@ public class SpecialistController {
     private SpecialistService specialistService;
 
     @Autowired
+    private AuthenticationService authenticationService;
+
+    @Autowired
     private UserService userService;
 
+    @Autowired
+    private RoleService roleService;
+
     @PostMapping(path = "specProfile/create", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createSpecialistProfile(@RequestBody SpecialistProfile specialistProfile){
-        userService.makeUserSpecialist(specialistProfile.getUserID());
-        specialistService.addSpecialistProfile(specialistProfile);
+    public ResponseEntity<?> createSpecialistProfile(@RequestBody SpecialistProfileDTO specialistProfileDTO, Authentication authentication){
+        User user = userService.findByEmail(authentication.getName());
+        SpecialistProfile specialistProfile = specialistService.addSpecialistProfile(specialistProfileDTO,user);
+        roleService.addRoleToUser(user.getId(), RoleLevel.SPEC);
         return ResponseEntity.ok(specialistProfile);
     }
 
-    @GetMapping(path = "specProfile/profile/{id}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "specProfile/{id}/profile", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<SpecialistProfile> getOneSpecialistProfile(@PathVariable Long id){
         return ResponseEntity.ok(specialistService.getSpecialistProfileByID(id));
     }
@@ -42,14 +54,24 @@ public class SpecialistController {
         return ResponseEntity.ok(specialistService.getAllSpecialistProfiles());
     }
 
-    @DeleteMapping(path = "specProfile/delete/{id}")
-    public ResponseEntity<?> deleteSpecialistProfile(@PathVariable Long id, Authentication authentication){
-        if(specialistService.confirmOwnershipForSpecialistProfile(id,authentication.getName())){ //todo or is admin
+    @PutMapping(path = "specProfile/{id}/edit",consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> editSpecialistProfile(@PathVariable Long id,@RequestBody SpecialistProfileDTO specialistProfileDTO, Authentication authentication) {
+        if (authenticationService.isAdmin(authentication) || authenticationService.confirmOwnershipForSpecialistProfile(id,authentication)) {
+            SpecialistProfile specialistProfile = specialistService.update(id,specialistProfileDTO);
+            return ResponseEntity.ok(specialistProfile);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @DeleteMapping(path = "specProfile/{id}/delete/{userID}")
+    public ResponseEntity<?> deleteSpecialistProfile(@PathVariable Long id, @PathVariable String userID, Authentication authentication){
+        if(authenticationService.confirmOwnershipForSpecialistProfile(id,authentication)){
             specialistService.deleteSpecialistProfile(id);
-            userService.unmakeUserSpecialist(authentication.getName());
+            roleService.removeRoleFromUser(userID,RoleLevel.SPEC);
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.ok("Forbidden action");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
     //todo edit

@@ -1,20 +1,20 @@
-package com.maciejBigos.poAwarii.user;
+package com.maciejBigos.poAwarii.role;
 
 import com.maciejBigos.poAwarii.help.UserSequenceIdGenerator;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(updatable = false)
+    @NotNull
     private String roleName;
 
     public Role(Long id, String roleName) {
@@ -24,6 +24,10 @@ public class Role implements GrantedAuthority {
 
     public Role(String roleName) {
         this.roleName = roleName;
+    }
+
+    public Role() {
+
     }
 
     @Override

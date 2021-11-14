@@ -1,5 +1,6 @@
 package com.maciejBigos.poAwarii.malfunction;
 
+import com.maciejBigos.poAwarii.specialist.SpecialistProfile;
 import com.maciejBigos.poAwarii.user.User;
 
 import javax.persistence.*;
@@ -22,19 +23,14 @@ public class Malfunction {
             generator = "malfunction_sequence"
     )
     private Long id;
-    //todo learn how to do it ¯\_(ツ)_/¯
-//    @ManyToOne
-//    @MapsId
-//    @JoinColumn(name = "userID",nullable = false)
-//    private User creator;
-//    @ManyToOne
-//    @MapsId
-//    @JoinColumn(name = "userID", nullable = true)
-//    private User specialist;
-    private String creatorID;
-    private String specialistID;
+    @ManyToOne
+    @JoinColumn(name = "creator_user_id")
+    private User creator;
+    @ManyToOne
+    @JoinColumn(name = "specialist_specialist_profile_id")
+    private SpecialistProfile specialist;
     @ElementCollection
-    private List<String> specialistIDs = new ArrayList<>(); // lista spec ktorzy deklaruja sie podjac zadania, oczekuja na akceptacje uzytkownika
+    private List<SpecialistProfile> specialists = new ArrayList<>(); // lista spec ktorzy deklaruja sie podjac zadania, oczekuja na akceptacje uzytkownika
     private String name;
     private String description;
     @ElementCollection
@@ -42,6 +38,14 @@ public class Malfunction {
     private String location;
     private String phoneNumber;
     private String email;
+
+    public SpecialistProfile getSpecialist() {
+        return specialist;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
 
     public Malfunction() {
     }
@@ -55,19 +59,8 @@ public class Malfunction {
         this.name = name;
     }
 
-//    public Malfunction(User creator, String name, String description, List<String> categories, String location, String phoneNumber, String email) {
-//        this.creator = creator;
-//        this.name = name;
-//        this.description = description;
-//        this.categories = categories;
-//        this.location = location;
-//        this.phoneNumber = phoneNumber;
-//        this.email = email;
-//    }
-
-
-    public Malfunction(String creatorID, String name, String description, List<String> categories, String location, String phoneNumber, String email) {
-        this.creatorID = creatorID;
+    public Malfunction(User creator, String name, String description, List<String> categories, String location, String phoneNumber, String email) {
+        this.creator = creator;
         this.name = name;
         this.description = description;
         this.categories = categories;
@@ -75,6 +68,17 @@ public class Malfunction {
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
+
+
+//    public Malfunction(String creatorID, String name, String description, List<String> categories, String location, String phoneNumber, String email) {
+//        this.creatorID = creatorID;
+//        this.name = name;
+//        this.description = description;
+//        this.categories = categories;
+//        this.location = location;
+//        this.phoneNumber = phoneNumber;
+//        this.email = email;
+//    }
 
     public Long getId() {
         return id;
@@ -132,32 +136,24 @@ public class Malfunction {
         this.email = email;
     }
 
-    public String getCreatorID() {
-        return creatorID;
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 
-    public void setCreatorID(String creatorID) {
-        this.creatorID = creatorID;
+    public void setSpecialist(SpecialistProfile specialist) {
+        this.specialist = specialist;
     }
 
-    public String getSpecialistID() {
-        return specialistID;
+    public List<SpecialistProfile> getSpecialists() {
+        return specialists;
     }
 
-    public void setSpecialistID(String specialistID) {
-        this.specialistID = specialistID;
+    public void setSpecialistIDs(List<SpecialistProfile> specialists) {
+        this.specialists = specialists;
     }
 
-    public List<String> getSpecialistIDs() {
-        return specialistIDs;
-    }
-
-    public void setSpecialistIDs(List<String> specialistIDs) {
-        this.specialistIDs = specialistIDs;
-    }
-
-    public boolean addSpecialistID(String aLong) {
-        return specialistIDs.add(aLong);
+    public void addSpecialistID(SpecialistProfile specialistProfile) {
+        specialists.add(specialistProfile);
     }
 
     public boolean addAll(Collection<? extends String> c) {
@@ -165,11 +161,11 @@ public class Malfunction {
     }
 
     public Malfunction clearInterested() {
-        specialistIDs.clear();
+        specialists.clear();
         return this;
     }
 
-    public boolean remove(Object o) {
-        return specialistIDs.remove(o);
+    public void remove(Object o) {
+        specialists.remove(o);
     }
 }

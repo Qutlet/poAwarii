@@ -1,7 +1,6 @@
 package com.maciejBigos.poAwarii.security;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.maciejBigos.poAwarii.user.CustomUserDetails;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

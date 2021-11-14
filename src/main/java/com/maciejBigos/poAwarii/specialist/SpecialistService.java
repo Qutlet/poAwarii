@@ -1,10 +1,12 @@
 package com.maciejBigos.poAwarii.specialist;
 
+import com.maciejBigos.poAwarii.role.Role;
+import com.maciejBigos.poAwarii.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class SpecialistService {
@@ -16,8 +18,23 @@ public class SpecialistService {
         this.specialistRepository = specialistRepository;
     }
 
-    public void addSpecialistProfile(SpecialistProfile specialistProfile){
-        specialistRepository.save(specialistProfile);
+    private String betterStringStrikesBack(String userDefined, String newString){
+        if (newString == null){
+            return userDefined;
+        }
+        return newString;
+    }
+
+    public SpecialistProfile addSpecialistProfile(SpecialistProfileDTO specialistProfileDTO, User user){
+        SpecialistProfile specialistProfile = new SpecialistProfile();
+        specialistProfile.setUser(user);
+        specialistProfile.setCategories(specialistProfileDTO.getCategories());
+        specialistProfile.setCustomProfileName(specialistProfileDTO.getCustomProfileName());
+        specialistProfile.setEmail(betterStringStrikesBack(user.getEmail(),specialistProfileDTO.getEmail()));
+        specialistProfile.setFirstName(betterStringStrikesBack(user.getFirstName(), specialistProfileDTO.getFirstName()));
+        specialistProfile.setLastName(betterStringStrikesBack(user.getLastName(), specialistProfileDTO.getLastName()));
+        specialistProfile.setPhoneNumber(betterStringStrikesBack(user.getPhoneNumber(), specialistProfileDTO.getPhoneNumber()));
+        return specialistRepository.save(specialistProfile);
     }
 
     public SpecialistProfile getSpecialistProfileByID(Long id){
@@ -34,16 +51,31 @@ public class SpecialistService {
 
     public List<SpecialistProfile> getAllCategorizedSpecialistProfiles(String cat){
         List<SpecialistProfile> specialistProfileList = specialistRepository.findAll();
-        specialistProfileList.removeIf(specialistProfile -> !specialistProfile.getCategories().contains(cat));
+        Set<String> stringi = new HashSet<>(Arrays.asList(cat.split("\\+")));
+        specialistProfileList.removeIf(specialistProfile -> isContainAny(specialistProfile.getCategories(), Arrays.asList(stringi.toArray())));
         return specialistProfileList;
     }
 
-    public boolean confirmOwnershipForSpecialistProfile(Long specialistProfileID, String userName){
-        return specialistRepository.getById(specialistProfileID).getEmail().equals(userName);
+    private boolean isContainAny(List list, List list1){
+        for (Object o : list) {
+            for (Object o1 : list1) {
+                if (o.equals(o1)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
-    public void update(){
-
+    public SpecialistProfile update(Long id,SpecialistProfileDTO specialistProfileDTO){
+        SpecialistProfile specialistProfile = specialistRepository.getById(id);
+        specialistProfile.setCategories(specialistProfileDTO.getCategories());
+        specialistProfile.setCustomProfileName(specialistProfileDTO.getCustomProfileName());
+        specialistProfile.setEmail(specialistProfileDTO.getEmail());
+        specialistProfile.setFirstName(specialistProfileDTO.getFirstName());
+        specialistProfile.setLastName(specialistProfileDTO.getLastName());
+        specialistProfile.setPhoneNumber(specialistProfileDTO.getPhoneNumber());
+        return specialistRepository.save(specialistProfile);
     }
 
 }

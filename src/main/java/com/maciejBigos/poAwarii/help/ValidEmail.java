@@ -1,4 +1,6 @@
-package com.maciejBigos.poAwarii.user;
+package com.maciejBigos.poAwarii.help;
+
+import com.maciejBigos.poAwarii.help.EmailValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -1,4 +1,4 @@
-package com.maciejBigos.poAwarii.user;
+package com.maciejBigos.poAwarii.help;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

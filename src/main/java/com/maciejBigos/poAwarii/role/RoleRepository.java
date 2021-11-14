@@ -1,4 +1,4 @@
-package com.maciejBigos.poAwarii.user;
+package com.maciejBigos.poAwarii.role;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,11 +1,11 @@
 package com.maciejBigos.poAwarii.specialist;
 
-import com.maciejBigos.poAwarii.user.Role;
+import com.maciejBigos.poAwarii.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Entity
 public class SpecialistProfile {
@@ -22,16 +22,12 @@ public class SpecialistProfile {
             generator = "specialistProfile_sequence"
     )
     private Long id;
-    /**
-     * Profile fields
-     */
-    private String userID;
+    @OneToOne
+    @JoinColumn(name = "user_user_id")
+    private User user;
     private String customProfileName;
     @ElementCollection
     private List<String> categories = new ArrayList<>();
-    /**
-     * User data field, consider delete this section
-     */
     private String firstName; // Same as userFirstName
     private String lastName; // Same as userLastName
     private String email; // Same as userEmail
@@ -40,14 +36,17 @@ public class SpecialistProfile {
     //todo photo gallery
 
 
-    public SpecialistProfile(String userID, String customProfileName, List<String> categories, String firstName, String lastName, String email, String phoneNumber) {
-        this.userID = userID;
+    public SpecialistProfile(User user, String customProfileName, List<String> categories, String firstName, String lastName, String email, String phoneNumber) {
+        this.user = user;
         this.customProfileName = customProfileName;
         this.categories = categories;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
+    }
+
+    public SpecialistProfile() {
     }
 
     public Long getId() {
@@ -58,12 +57,12 @@ public class SpecialistProfile {
         this.id = id;
     }
 
-    public String getUserID() {
-        return userID;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getCustomProfileName() {
@@ -113,4 +112,5 @@ public class SpecialistProfile {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
 }

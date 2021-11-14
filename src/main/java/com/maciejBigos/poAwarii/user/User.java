@@ -1,16 +1,16 @@
 package com.maciejBigos.poAwarii.user;
 
 import com.maciejBigos.poAwarii.help.UserSequenceIdGenerator;
+import com.maciejBigos.poAwarii.malfunction.Malfunction;
+import com.maciejBigos.poAwarii.role.Role;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
-@Entity
+@Entity(name = "Users")
 public class User {
 
     @Id
@@ -29,16 +29,24 @@ public class User {
     private String lastName;
     private String password;
     private String email;
+    @JoinTable(name = "Users_roles",
+            joinColumns = @JoinColumn(name = "Users_userID", referencedColumnName = "userID"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"))
     @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new ArrayList<>();
+    private List<Role> roles = new ArrayList<>();
 
     private String phoneNumber;
 
     @Column(name = "enabled")
     private boolean enabled;
 
-    @Column(name = "isSpecialist")
-    private boolean isSpecialist = false;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
 
     public User() {
         this.enabled = false;
@@ -88,14 +96,6 @@ public class User {
         return enabled;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> rolesNames) {
-        this.roles = rolesNames;
-    }
-
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -108,14 +108,6 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public boolean isSpecialist() {
-        return isSpecialist;
-    }
-
-    public void setSpecialist(boolean specialist) {
-        isSpecialist = specialist;
-    }
-
     public boolean add(Role role) {
         return roles.add(role);
     }
@@ -123,6 +115,5 @@ public class User {
     public boolean remove(Object o) {
         return roles.remove(o);
     }
-
 
 }

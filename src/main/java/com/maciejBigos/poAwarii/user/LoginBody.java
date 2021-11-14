@@ -1,5 +1,7 @@
 package com.maciejBigos.poAwarii.user;
 
+import com.maciejBigos.poAwarii.help.ValidEmail;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 

@@ -1,0 +1,2 @@
+--insert into role(id,role_name) values (0,'ADMIN')
+--insert into role(id,role_name) values (1,'USER')

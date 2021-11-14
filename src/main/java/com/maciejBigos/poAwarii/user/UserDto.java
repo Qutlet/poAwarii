@@ -1,12 +1,15 @@
 package com.maciejBigos.poAwarii.user;
 
+import com.maciejBigos.poAwarii.help.PasswordMatches;
+import com.maciejBigos.poAwarii.help.ValidEmail;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @PasswordMatches
 public class UserDto {
 
-    @NotNull(message = "first name null test")
+    @NotNull
     @NotEmpty
     private String firstName;
 
