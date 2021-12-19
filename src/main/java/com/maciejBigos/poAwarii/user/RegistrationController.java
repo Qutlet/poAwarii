@@ -22,6 +22,7 @@ public class RegistrationController {
         this.roleService = roleService;
     }
 
+    @CrossOrigin
     @PostMapping(value = "/registration", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity register(@Valid @RequestBody UserDto userDto){
         User user;

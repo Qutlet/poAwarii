@@ -1,5 +1,6 @@
 package com.maciejBigos.poAwarii.specialist;
 
+import com.maciejBigos.poAwarii.help.UserAlreadyHaveRoleException;
 import com.maciejBigos.poAwarii.role.RoleLevel;
 import com.maciejBigos.poAwarii.role.RoleService;
 import com.maciejBigos.poAwarii.security.AuthenticationService;
@@ -33,9 +34,12 @@ public class SpecialistController {
 
     @PostMapping(path = "specProfile/create", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createSpecialistProfile(@RequestBody SpecialistProfileDTO specialistProfileDTO, Authentication authentication){
-        User user = userService.findByEmail(authentication.getName());
-        SpecialistProfile specialistProfile = specialistService.addSpecialistProfile(specialistProfileDTO,user);
-        roleService.addRoleToUser(user.getId(), RoleLevel.SPEC);
+        SpecialistProfile specialistProfile = null;
+        try {
+            specialistProfile = specialistService.addSpecialistProfile(specialistProfileDTO,authentication);
+        } catch (UserAlreadyHaveRoleException e) {
+            ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(e.getMessage());
+        }
         return ResponseEntity.ok(specialistProfile);
     }
 
@@ -74,5 +78,5 @@ public class SpecialistController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-    //todo edit
+
 }

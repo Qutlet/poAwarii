@@ -4,6 +4,8 @@ import com.maciejBigos.poAwarii.user.User;
 import com.maciejBigos.poAwarii.user.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RoleService {
 
@@ -46,6 +48,11 @@ public class RoleService {
                 break;
         }
         userService.removeRoleFromUser(userID,role);
+    }
+
+    public boolean isUserHaveRole(User user, RoleLevel roleLevel) {
+        List<Role> userRoles = user.getRoles();
+        return userRoles.stream().anyMatch(role -> role.getRoleName().equals(roleLevel.name()));
     }
 
     public void createRole(Role role){

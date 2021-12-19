@@ -3,11 +3,13 @@ package com.maciejBigos.poAwarii.malfunction;
 import com.maciejBigos.poAwarii.security.AuthenticationService;
 import com.maciejBigos.poAwarii.user.User;
 import com.maciejBigos.poAwarii.user.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.LoggingSystem;
+import org.springframework.boot.logging.logback.LogbackLoggingSystem;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +17,7 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@CrossOrigin
 @RestController
 public class MalfunctionController {
 
@@ -35,7 +38,7 @@ public class MalfunctionController {
     }
 
     @GetMapping(path = "/test/malfunctions", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getMalfunctionsTEST(){
+    public ResponseEntity<?> getMalfunctionsTEST(Authentication authentication){
         final List<Malfunction> malfunctions = malfunctionService.getAllMalfunctions();
         return ResponseEntity.ok(malfunctions);
     }

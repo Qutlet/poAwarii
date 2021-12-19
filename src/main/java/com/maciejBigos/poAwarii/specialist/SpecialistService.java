@@ -1,7 +1,11 @@
 package com.maciejBigos.poAwarii.specialist;
 
+import com.maciejBigos.poAwarii.help.UserAlreadyHaveRoleException;
 import com.maciejBigos.poAwarii.role.Role;
+import com.maciejBigos.poAwarii.role.RoleLevel;
+import com.maciejBigos.poAwarii.role.RoleService;
 import com.maciejBigos.poAwarii.user.User;
+import com.maciejBigos.poAwarii.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -12,6 +16,12 @@ import java.util.*;
 public class SpecialistService {
 
     private SpecialistRepository specialistRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     public SpecialistService(SpecialistRepository specialistRepository) {
@@ -25,7 +35,12 @@ public class SpecialistService {
         return newString;
     }
 
-    public SpecialistProfile addSpecialistProfile(SpecialistProfileDTO specialistProfileDTO, User user){
+    public SpecialistProfile addSpecialistProfile(SpecialistProfileDTO specialistProfileDTO, Authentication authentication) throws UserAlreadyHaveRoleException {
+        User user = userService.findByEmail(authentication.getName());
+        if (roleService.isUserHaveRole(user,RoleLevel.SPEC)) {
+            throw new UserAlreadyHaveRoleException(RoleLevel.SPEC.name());
+        }
+        roleService.addRoleToUser(user.getId(), RoleLevel.SPEC);
         SpecialistProfile specialistProfile = new SpecialistProfile();
         specialistProfile.setUser(user);
         specialistProfile.setCategories(specialistProfileDTO.getCategories());

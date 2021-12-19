@@ -4,6 +4,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,14 +25,17 @@ public class MethodArgumentNotValidExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Error methodArgumentNotValidException(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
+        List<org.springframework.validation.ObjectError> objectErrors = result.getAllErrors();
         List<org.springframework.validation.FieldError> fieldErrors = result.getFieldErrors();
-        return processFieldErrors(fieldErrors);
+
+        return processFieldErrors(objectErrors);
     }
 
-    private Error processFieldErrors(List<org.springframework.validation.FieldError> fieldErrors) {
+    private Error processFieldErrors(List<org.springframework.validation.ObjectError> fieldErrors) {
         Error error = new Error(BAD_REQUEST.value(), "Validation error");
-        for (org.springframework.validation.FieldError fieldError: fieldErrors) {
-            error.addFieldError(fieldError.getObjectName(),fieldError.getField(), fieldError.getDefaultMessage());
+        for (org.springframework.validation.ObjectError fieldError: fieldErrors) {
+           // error.addFieldError(fieldError.getObjectName(),fieldError.getField(), fieldError.getDefaultMessage());
+            error.addFieldError(fieldError.getObjectName(),fieldError.getDefaultMessage());
         }
         return error;
     }
@@ -39,7 +43,7 @@ public class MethodArgumentNotValidExceptionHandler {
     static class Error {
         private final int status;
         private final String message;
-        private List<FieldError> fieldErrors = new ArrayList<>();
+        private List<ObjectError> fieldErrors = new ArrayList<>();
 
         Error(int status, String message) {
             this.status = status;
@@ -54,12 +58,12 @@ public class MethodArgumentNotValidExceptionHandler {
             return message;
         }
 
-        public void addFieldError(String objName,String path, String message) {
-            FieldError error = new FieldError(objName,path, message);
+        public void addFieldError(String objName, String message) {
+            ObjectError error = new ObjectError(objName, message);
             fieldErrors.add(error);
         }
 
-        public List<FieldError> getFieldErrors() {
+        public List<ObjectError> getFieldErrors() {
             return fieldErrors;
         }
     }
