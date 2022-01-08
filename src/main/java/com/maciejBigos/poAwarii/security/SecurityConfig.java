@@ -1,7 +1,6 @@
 package com.maciejBigos.poAwarii.security;
 
-import com.maciejBigos.poAwarii.user.UserRepository;
-import org.hibernate.metamodel.model.domain.ManagedDomainType;
+import com.maciejBigos.poAwarii.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -62,6 +61,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/logon").permitAll().and()
                 .authorizeRequests().antMatchers("/registration").permitAll().and()
                 .authorizeRequests().antMatchers("/test/*").permitAll().and()
+                .authorizeRequests().antMatchers("/file/*").permitAll().and()
+                .authorizeRequests().antMatchers("/file/*/*").permitAll().and()
+                .authorizeRequests().antMatchers("/file/*/*/*").permitAll().and()
                 .authorizeRequests().antMatchers("/admin").hasRole("ADMIN").and()
                 .authorizeRequests().antMatchers("/").hasRole("USER")
                 .anyRequest().authenticated();

@@ -1,7 +1,7 @@
 package com.maciejBigos.poAwarii.security;
 
-import com.maciejBigos.poAwarii.user.User;
-import com.maciejBigos.poAwarii.user.UserRepository;
+import com.maciejBigos.poAwarii.model.User;
+import com.maciejBigos.poAwarii.repository.UserRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -1,10 +1,10 @@
 package com.maciejBigos.poAwarii.security;
 
-import com.maciejBigos.poAwarii.malfunction.MalfunctionRepository;
-import com.maciejBigos.poAwarii.role.Role;
-import com.maciejBigos.poAwarii.role.RoleLevel;
-import com.maciejBigos.poAwarii.specialist.SpecialistRepository;
-import com.maciejBigos.poAwarii.user.UserRepository;
+import com.maciejBigos.poAwarii.repository.MalfunctionRepository;
+import com.maciejBigos.poAwarii.model.Role;
+import com.maciejBigos.poAwarii.model.enums.RoleLevel;
+import com.maciejBigos.poAwarii.repository.SpecialistRepository;
+import com.maciejBigos.poAwarii.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 

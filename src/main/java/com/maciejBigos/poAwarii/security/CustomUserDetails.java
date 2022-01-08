@@ -1,7 +1,7 @@
 package com.maciejBigos.poAwarii.security;
 
-import com.maciejBigos.poAwarii.role.Role;
-import com.maciejBigos.poAwarii.user.User;
+import com.maciejBigos.poAwarii.model.Role;
+import com.maciejBigos.poAwarii.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
