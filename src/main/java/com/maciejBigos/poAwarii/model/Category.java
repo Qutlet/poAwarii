@@ -35,4 +35,12 @@ public class Category {
     public void setCreator(User creator) {
         this.creator = creator;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

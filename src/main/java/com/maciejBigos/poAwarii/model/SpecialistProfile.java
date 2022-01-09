@@ -32,6 +32,7 @@ public class SpecialistProfile {
     @ElementCollection
     private List<String> photos = new ArrayList<>();
     private String location;
+    private String description;
 
     public List<String> getPhotos() {
         return photos;
@@ -41,7 +42,7 @@ public class SpecialistProfile {
         this.photos = photos;
     }
 
-    public SpecialistProfile(User user, String customProfileName, List<String> categories, String firstName, String lastName, String email, String phoneNumber, String location) {
+    public SpecialistProfile(User user, String customProfileName, List<String> categories, String firstName, String lastName, String email, String phoneNumber, String location, String description) {
         this.user = user;
         this.customProfileName = customProfileName;
         this.categories = categories;
@@ -50,6 +51,7 @@ public class SpecialistProfile {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.location = location;
+        this.description = description;
     }
 
     public SpecialistProfile() {
@@ -125,5 +127,13 @@ public class SpecialistProfile {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

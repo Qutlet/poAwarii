@@ -13,6 +13,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @CrossOrigin
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
 
@@ -25,13 +26,28 @@ public class UserController {
         this.authenticationService = authenticationService;
     }
 
-    @GetMapping(path = "/users/{id}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @GetMapping(path = "/{userID}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getUserByID(@PathVariable String userID, Authentication authentication){
         ResponseUser user = userService.getUserByID(userID);
         return  ResponseEntity.ok(user);
     }
 
-    @DeleteMapping(path = "/users/{userID}/delete")
+    @GetMapping(path = "/{userID}/roles" , produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserRoles(@PathVariable String userID, Authentication authentication) {
+        return ResponseEntity.ok(userService.getUserRoles(userID));
+    }
+
+    @GetMapping(path = "/get/me", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getMe(Authentication authentication) {
+        return ResponseEntity.ok(userService.getMe(authentication.getName()));
+    }
+
+    @DeleteMapping(path = "/{userID}/delete")
     public ResponseEntity<?> deleteAccount(@PathVariable String userID, Authentication authentication){
         if (authenticationService.isAdmin(authentication) || authenticationService.isAccountOwner(userID,authentication)){
             userService.deleteAccount(userID);

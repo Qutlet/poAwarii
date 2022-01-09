@@ -123,4 +123,18 @@ public class User {
         return roles.remove(o);
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", roles=" + roles +
+                ", photo='" + photo + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", enabled=" + enabled +
+                '}';
+    }
 }

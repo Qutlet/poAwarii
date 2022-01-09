@@ -1,6 +1,7 @@
 package com.maciejBigos.poAwarii.controller;
 
 import com.maciejBigos.poAwarii.model.Category;
+import com.maciejBigos.poAwarii.model.messeges.ResponseCategory;
 import com.maciejBigos.poAwarii.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<String>> getAll() {
+    public ResponseEntity<List<ResponseCategory>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.getCategories());
     }
 

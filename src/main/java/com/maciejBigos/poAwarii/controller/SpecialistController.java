@@ -46,7 +46,7 @@ public class SpecialistController {
         try {
             specialistProfile = specialistService.addSpecialistProfile(specialistProfileDTO,authentication);
         } catch (UserAlreadyHaveRoleException e) {
-            ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(e.getMessage());
         }
         return ResponseEntity.ok(specialistProfile);
     }

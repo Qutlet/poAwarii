@@ -55,7 +55,13 @@ public class RoleService {
 
     public boolean isUserHaveRole(User user, RoleLevel roleLevel) {
         List<Role> userRoles = user.getRoles();
-        return userRoles.stream().anyMatch(role -> role.getRoleName().equals(roleLevel.name()));
+        userRoles.forEach(role -> System.out.println(role.getRoleName()));
+        for (Role role : userRoles) {
+            if (role.getRoleName().equals(roleLevel.name())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void createRole(Role role){

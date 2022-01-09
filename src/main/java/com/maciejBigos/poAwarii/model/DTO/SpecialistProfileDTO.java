@@ -17,8 +17,9 @@ public class SpecialistProfileDTO {
     private String email;
     private String phoneNumber;
     private String location;
+    private String description;
 
-    public SpecialistProfileDTO(String customProfileName, List<String> categories, String firstName, String lastName, String email, String phoneNumber, String location) {
+    public SpecialistProfileDTO(String customProfileName, List<String> categories, String firstName, String lastName, String email, String phoneNumber, String location, String description) {
         this.customProfileName = customProfileName;
         this.categories = categories;
         this.firstName = firstName;
@@ -26,6 +27,7 @@ public class SpecialistProfileDTO {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.location = location;
+        this.description = description;
     }
 
     public SpecialistProfileDTO(String customProfileName, List<String> categories) {
@@ -90,5 +92,13 @@ public class SpecialistProfileDTO {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

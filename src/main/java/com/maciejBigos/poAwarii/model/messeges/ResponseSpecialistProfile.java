@@ -17,6 +17,7 @@ public class ResponseSpecialistProfile {
     private String userPhoto;
     private List<String> photos;
     private String location;
+    private String description;
 
     public String getUserPhoto() {
         return userPhoto;
@@ -98,7 +99,23 @@ public class ResponseSpecialistProfile {
         this.photos = photos;
     }
 
-    public ResponseSpecialistProfile(Long id, String userId, String customProfileName, List<String> categories, String firstName, String lastName, String email, String phoneNumber, String userPhoto, List<String> photos, String location) {
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ResponseSpecialistProfile(Long id, String userId, String customProfileName, List<String> categories, String firstName, String lastName, String email, String phoneNumber, String userPhoto, List<String> photos, String location, String description) {
         this.id = id;
         this.userId = userId;
         this.customProfileName = customProfileName;
@@ -110,6 +127,7 @@ public class ResponseSpecialistProfile {
         this.userPhoto = userPhoto;
         this.photos = photos;
         this.location = location;
+        this.description = description;
     }
 
     public static final ResponseSpecialistProfileBuilder builder = new ResponseSpecialistProfileBuilder();
@@ -126,6 +144,7 @@ public class ResponseSpecialistProfile {
         private List<String> photos;
         private String userPhoto;
         private String location;
+        private String description;
 
         public ResponseSpecialistProfileBuilder id(Long id) {
             this.id = id;
@@ -186,9 +205,14 @@ public class ResponseSpecialistProfile {
             return this;
         }
 
+        public ResponseSpecialistProfileBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
         public ResponseSpecialistProfile build(){
             return new ResponseSpecialistProfile(id,userId,customProfileName,categories,firstName,lastName,
-                    email,phoneNumber,userPhoto,photos,location);
+                    email,phoneNumber,userPhoto,photos,location, description);
         }
     }
 }

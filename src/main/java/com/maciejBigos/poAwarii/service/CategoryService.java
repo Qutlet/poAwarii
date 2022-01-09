@@ -2,6 +2,7 @@ package com.maciejBigos.poAwarii.service;
 
 import com.maciejBigos.poAwarii.model.Category;
 import com.maciejBigos.poAwarii.model.User;
+import com.maciejBigos.poAwarii.model.messeges.ResponseCategory;
 import com.maciejBigos.poAwarii.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,8 +30,8 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    public List<String> getCategories() {
-        return categoryRepository.findAll().stream().map(Category::getName).collect(Collectors.toList());
+    public List<ResponseCategory> getCategories() {
+        return categoryRepository.findAll().stream().map(ResponseCategory::new).collect(Collectors.toList());
     }
 
 }

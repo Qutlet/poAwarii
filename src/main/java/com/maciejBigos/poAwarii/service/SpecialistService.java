@@ -39,6 +39,8 @@ public class SpecialistService {
 
     public ResponseSpecialistProfile addSpecialistProfile(SpecialistProfileDTO specialistProfileDTO, Authentication authentication) throws UserAlreadyHaveRoleException {
         User user = userService.findByEmail(authentication.getName());
+        System.out.println(user.toString());
+        user.getRoles().forEach(role -> System.out.println(role.getRoleName()));
         if (roleService.isUserHaveRole(user,RoleLevel.SPEC)) {
             throw new UserAlreadyHaveRoleException(RoleLevel.SPEC.name());
         }
@@ -52,6 +54,7 @@ public class SpecialistService {
         specialistProfile.setLastName(betterStringStrikesBack(user.getLastName(), specialistProfileDTO.getLastName()));
         specialistProfile.setPhoneNumber(betterStringStrikesBack(user.getPhoneNumber(), specialistProfileDTO.getPhoneNumber()));
         specialistProfile.setLocation(specialistProfileDTO.getLocation());
+        specialistProfile.setDescription(specialistProfileDTO.getDescription());
         specialistRepository.save(specialistProfile);
         return ResponseSpecialistProfile.builder
                 .id(specialistProfile.getId())
@@ -65,6 +68,7 @@ public class SpecialistService {
                 .photos(specialistProfile.getPhotos())
                 .userPhoto(specialistProfile.getUser())
                 .location(specialistProfile.getLocation())
+                .description(specialistProfile.getDescription())
                 .build();
     }
 
@@ -86,6 +90,7 @@ public class SpecialistService {
                 .photos(specialistProfile.getPhotos())
                 .userPhoto(specialistProfile.getUser())
                 .location(specialistProfile.getLocation())
+                .description(specialistProfile.getDescription())
                 .build();
     }
 
@@ -102,6 +107,7 @@ public class SpecialistService {
                 .photos(specialistProfile.getPhotos())
                 .userPhoto(specialistProfile.getUser())
                 .location(specialistProfile.getLocation())
+                .description(specialistProfile.getDescription())
                 .build()).collect(Collectors.toList());
     }
 
@@ -125,6 +131,7 @@ public class SpecialistService {
                 .photos(specialistProfile.getPhotos())
                 .userPhoto(specialistProfile.getUser())
                 .location(specialistProfile.getLocation())
+                .description(specialistProfile.getDescription())
                 .build()).collect(Collectors.toList());
     }
 
@@ -147,6 +154,8 @@ public class SpecialistService {
         specialistProfile.setFirstName(specialistProfileDTO.getFirstName());
         specialistProfile.setLastName(specialistProfileDTO.getLastName());
         specialistProfile.setPhoneNumber(specialistProfileDTO.getPhoneNumber());
+        specialistProfile.setLocation(specialistProfileDTO.getLocation());
+        specialistProfile.setDescription(specialistProfileDTO.getDescription());
         specialistRepository.save(specialistProfile);
         return ResponseSpecialistProfile.builder
                 .id(specialistProfile.getId())
@@ -160,6 +169,7 @@ public class SpecialistService {
                 .photos(specialistProfile.getPhotos())
                 .userPhoto(specialistProfile.getUser())
                 .location(specialistProfile.getLocation())
+                .description(specialistProfile.getDescription())
                 .build();
     }
 

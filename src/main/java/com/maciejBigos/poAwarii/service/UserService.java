@@ -8,6 +8,7 @@ import com.maciejBigos.poAwarii.model.DTO.UserDto;
 import com.maciejBigos.poAwarii.model.messeges.ResponseUser;
 import com.maciejBigos.poAwarii.security.CustomUserDetails;
 import com.maciejBigos.poAwarii.repository.UserRepository;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -126,5 +129,30 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(senderId).get();
         user.setPhoto(filename);
         userRepository.save(user);
+    }
+
+    public List<ResponseUser> getAllUsers() {
+       return userRepository.findAll().stream().map(user -> ResponseUser.builder.id(user.getId())
+               .firstName(user.getFirstName())
+               .lastName(user.getLastName())
+               .phoneNumber(user.getPhoneNumber())
+               .email(user.getEmail())
+               .photo(user.getPhoto()).build()).collect(Collectors.toList());
+    }
+
+    public List<String> getUserRoles(String id) {
+        return userRepository.findById(id).get().getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
+    }
+
+    public ResponseUser getMe(String name) {
+        User user = userRepository.findByEmail(name);
+        return ResponseUser.builder
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phoneNumber(user.getPhoneNumber())
+                .email(user.getEmail())
+                .photo(user.getPhoto())
+                .build();
     }
 }
