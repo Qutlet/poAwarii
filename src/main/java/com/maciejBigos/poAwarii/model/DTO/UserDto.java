@@ -27,6 +27,16 @@ public class UserDto {
     @NotEmpty
     private String email;
 
+    private String phoneNumber;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -73,5 +83,24 @@ public class UserDto {
         this.password = password;
         this.matchingPassword = matchingPassword;
         this.email = email;
+    }
+
+    public UserDto(@NotNull @NotEmpty String firstName, @NotNull @NotEmpty String lastName, @NotNull @NotEmpty String password, String matchingPassword, @NotNull @NotEmpty String email, @NotNull @NotEmpty String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.matchingPassword = matchingPassword;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public UserDto(@NotNull @NotEmpty String firstName, @NotNull @NotEmpty String lastName, @NotNull @NotEmpty String email, @NotNull @NotEmpty String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public UserDto() {
     }
 }

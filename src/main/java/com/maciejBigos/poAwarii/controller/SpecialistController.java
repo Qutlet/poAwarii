@@ -1,9 +1,11 @@
 package com.maciejBigos.poAwarii.controller;
 
 import com.maciejBigos.poAwarii.exceptions.UserAlreadyHaveRoleException;
+import com.maciejBigos.poAwarii.exceptions.UserIsNotSpecialistException;
 import com.maciejBigos.poAwarii.model.DTO.SpecialistProfileDTO;
 import com.maciejBigos.poAwarii.model.SpecialistProfile;
 import com.maciejBigos.poAwarii.model.enums.RoleLevel;
+import com.maciejBigos.poAwarii.model.messeges.ResponseMessage;
 import com.maciejBigos.poAwarii.model.messeges.ResponseSpecialistProfile;
 import com.maciejBigos.poAwarii.service.RoleService;
 import com.maciejBigos.poAwarii.security.AuthenticationService;
@@ -85,6 +87,15 @@ public class SpecialistController {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @GetMapping("specProfile/user/{userID}")
+    public ResponseEntity<?> getSpecialistProfileByUser(@PathVariable String userID, Authentication authentication) {
+        try {
+            return ResponseEntity.ok(specialistService.getByUserId(userID));
+        } catch (UserIsNotSpecialistException e) {
+            return ResponseEntity.ok(new ResponseMessage(e.getMessage()));
         }
     }
 

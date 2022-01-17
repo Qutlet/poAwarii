@@ -1,6 +1,7 @@
 package com.maciejBigos.poAwarii.service;
 
 import com.maciejBigos.poAwarii.exceptions.UserAlreadyHaveRoleException;
+import com.maciejBigos.poAwarii.exceptions.UserIsNotSpecialistException;
 import com.maciejBigos.poAwarii.model.DTO.SpecialistProfileDTO;
 import com.maciejBigos.poAwarii.model.SpecialistProfile;
 import com.maciejBigos.poAwarii.model.enums.RoleLevel;
@@ -39,8 +40,6 @@ public class SpecialistService {
 
     public ResponseSpecialistProfile addSpecialistProfile(SpecialistProfileDTO specialistProfileDTO, Authentication authentication) throws UserAlreadyHaveRoleException {
         User user = userService.findByEmail(authentication.getName());
-        System.out.println(user.toString());
-        user.getRoles().forEach(role -> System.out.println(role.getRoleName()));
         if (roleService.isUserHaveRole(user,RoleLevel.SPEC)) {
             throw new UserAlreadyHaveRoleException(RoleLevel.SPEC.name());
         }
@@ -74,6 +73,10 @@ public class SpecialistService {
 
     public SpecialistProfile getRawSpecialistProfileById(Long id){
         return specialistRepository.findById(id).get();
+    }
+
+    public SpecialistProfile getRawSpecialistProfileByUserId(String userId){
+        return specialistRepository.findByUserId(userId).get();
     }
 
     public ResponseSpecialistProfile getSpecialistProfileByID(Long id){
@@ -177,5 +180,27 @@ public class SpecialistService {
         SpecialistProfile specialistProfile = specialistRepository.findByUserId(senderId).get();
         specialistProfile.getPhotos().add(filename);
         specialistRepository.save(specialistProfile);
+    }
+
+    public ResponseSpecialistProfile getByUserId(String userId) throws UserIsNotSpecialistException {
+        try {
+            return specialistRepository.findByUserId(userId).map(specialistProfile -> ResponseSpecialistProfile.builder
+                    .id(specialistProfile.getId())
+                    .userId(specialistProfile.getUser())
+                    .categories(specialistProfile.getCategories())
+                    .customProfileName(specialistProfile.getCustomProfileName())
+                    .email(specialistProfile.getEmail())
+                    .firstName(specialistProfile.getFirstName())
+                    .lastName(specialistProfile.getLastName())
+                    .phoneNumber(specialistProfile.getPhoneNumber())
+                    .photos(specialistProfile.getPhotos())
+                    .userPhoto(specialistProfile.getUser())
+                    .location(specialistProfile.getLocation())
+                    .description(specialistProfile.getDescription())
+                    .build()).get();
+        } catch (NoSuchElementException e) {
+            throw new UserIsNotSpecialistException(userId);
+        }
+
     }
 }

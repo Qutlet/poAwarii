@@ -1,5 +1,7 @@
 package com.maciejBigos.poAwarii.model;
 
+import com.maciejBigos.poAwarii.model.enums.MalfunctionStatus;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +29,7 @@ public class Malfunction {
     @JoinColumn(name = "specialist_specialist_profile_id")
     private SpecialistProfile specialist;
     @ElementCollection
-    private List<SpecialistProfile> specialists = new ArrayList<>(); // lista spec ktorzy deklaruja sie podjac zadania, oczekuja na akceptacje uzytkownika
+    private List<Long> specialists = new ArrayList<>(); // lista spec ktorzy deklaruja sie podjac zadania, oczekuja na akceptacje uzytkownika
     private String name;
     private String description;
     @ElementCollection
@@ -35,6 +37,19 @@ public class Malfunction {
     private String location;
     private String phoneNumber;
     private String email;
+    private MalfunctionStatus status;
+
+    public void setSpecialists(List<Long> specialists) {
+        this.specialists = specialists;
+    }
+
+    public MalfunctionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MalfunctionStatus status) {
+        this.status = status;
+    }
 
     public SpecialistProfile getSpecialist() {
         return specialist;
@@ -45,15 +60,18 @@ public class Malfunction {
     }
 
     public Malfunction() {
+        this.status = MalfunctionStatus.PENDING;
     }
 
     public Malfunction(String name) {
         this.name = name;
+        this.status = MalfunctionStatus.PENDING;
     }
 
     public Malfunction(Long id, String name) {
         this.id = id;
         this.name = name;
+        this.status = MalfunctionStatus.PENDING;
     }
 
     public Malfunction(User creator, String name, String description, List<String> categories, String location, String phoneNumber, String email) {
@@ -64,6 +82,7 @@ public class Malfunction {
         this.location = location;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.status = MalfunctionStatus.PENDING;
     }
 
 
@@ -141,15 +160,15 @@ public class Malfunction {
         this.specialist = specialist;
     }
 
-    public List<SpecialistProfile> getSpecialists() {
+    public List<Long> getSpecialists() {
         return specialists;
     }
 
-    public void setSpecialistIDs(List<SpecialistProfile> specialists) {
+    public void setSpecialistIDs(List<Long> specialists) {
         this.specialists = specialists;
     }
 
-    public void addSpecialistID(SpecialistProfile specialistProfile) {
+    public void addSpecialistID(Long specialistProfile) {
         specialists.add(specialistProfile);
     }
 

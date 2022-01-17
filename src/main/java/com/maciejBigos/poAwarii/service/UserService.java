@@ -5,6 +5,7 @@ import com.maciejBigos.poAwarii.model.Role;
 import com.maciejBigos.poAwarii.model.SpecialistProfile;
 import com.maciejBigos.poAwarii.model.User;
 import com.maciejBigos.poAwarii.model.DTO.UserDto;
+import com.maciejBigos.poAwarii.model.messeges.ResponseMessage;
 import com.maciejBigos.poAwarii.model.messeges.ResponseUser;
 import com.maciejBigos.poAwarii.security.CustomUserDetails;
 import com.maciejBigos.poAwarii.repository.UserRepository;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserService implements UserDetailsService {
 
+    public static final String NO_USER_FOUND = "NO USER FOUND FOR ID: ";
+    public static final String SUCCESS = "OPERATION FINISHED SUCCESSFULLY";
 
     private final UserRepository userRepository;
 
@@ -154,5 +158,42 @@ public class UserService implements UserDetailsService {
                 .email(user.getEmail())
                 .photo(user.getPhoto())
                 .build();
+    }
+
+    public ResponseMessage editUser(String userId, UserDto userDto) {
+        try {
+            User user = userRepository.findById(userId).get();
+            user.setFirstName(userDto.getFirstName());
+            user.setLastName(userDto.getLastName());
+            user.setPhoneNumber(userDto.getPhoneNumber());
+            user.setEmail(userDto.getEmail());
+            userRepository.save(user);
+            return new ResponseMessage(SUCCESS);
+        } catch (NoSuchElementException elementException) {
+            return new ResponseMessage(NO_USER_FOUND + userId);
+        }
+    }
+
+    public ResponseMessage changePassword(String userId, String password) {
+        try {
+            User user = userRepository.findById(userId).get();
+            user.setPassword(passwordEncoder.encode(password));
+            userRepository.save(user);
+            return new ResponseMessage(SUCCESS);
+        } catch (NoSuchElementException elementException) {
+            return new ResponseMessage(NO_USER_FOUND + userId);
+        }
+    }
+
+    public int getRoleLevel(String userId) {
+        User user = userRepository.findById(userId).get();
+        List<Long> list = user.getRoles().stream().map(Role::getId).collect(Collectors.toList());
+        if (list.contains(0L)) {
+            return 0;
+        }
+        if (list.contains(2L)) {
+            return 2;
+        }
+        return 1;
     }
 }

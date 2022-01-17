@@ -88,10 +88,11 @@ public class MalfunctionController {
     /**
      * Specialist is interested in this malfunction, or user is interested this specialist
      */
-    @PutMapping(path = "/malfunctions/malfunction/{malfunctionID}/specialist/{specialistID}/interested",produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addInterestedSpecialist(@PathVariable Long malfunctionID, @PathVariable Long specialistID, Authentication authentication){
+    @PutMapping(path = "/malfunctions/malfunction/{malfunctionID}/specialist/interested",produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addInterestedSpecialist(@PathVariable Long malfunctionID, Authentication authentication){
         if (authenticationService.isAdmin(authentication) || authenticationService.isSpec(authentication) || authenticationService.checkOwnershipForMalfunction(malfunctionID,authentication)){
-            final ResponseMalfunction malfunction =  malfunctionService.addInterestedSpecialist(malfunctionID,specialistID);
+            String userId = userService.getMe(authentication.getName()).getId();
+            final ResponseMalfunction malfunction =  malfunctionService.addInterestedSpecialist(malfunctionID,userId);
             return ResponseEntity.ok(malfunction);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -136,4 +137,15 @@ public class MalfunctionController {
     public ResponseEntity<?> cos(@RequestBody String test, Authentication authentication){
         return ResponseEntity.ok(authentication.getAuthorities());
     }
+
+//    @GetMapping("/malfunctions/specialist/{specId}")
+//    public ResponseEntity<?> getMalfunctionLikedBySpec() {
+//
+//    }
+
+    @GetMapping("/malfunctions/user/{userId}")
+    public ResponseEntity<?> getMalfunctionByUser(@PathVariable String userId, Authentication authentication) {
+        return ResponseEntity.ok(malfunctionService.getAllUserMalfunction(userId));
+    }
+
 }

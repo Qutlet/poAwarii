@@ -2,6 +2,7 @@ package com.maciejBigos.poAwarii.model.messeges;
 
 import com.maciejBigos.poAwarii.model.SpecialistProfile;
 import com.maciejBigos.poAwarii.model.User;
+import com.maciejBigos.poAwarii.model.enums.MalfunctionStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,15 @@ public class ResponseMalfunction {
     private String location;
     private String phoneNumber;
     private String email;
+    private MalfunctionStatus status;
+
+    public MalfunctionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MalfunctionStatus status) {
+        this.status = status;
+    }
 
     public Long getId() {
         return id;
@@ -100,7 +110,7 @@ public class ResponseMalfunction {
         this.email = email;
     }
 
-    public ResponseMalfunction(Long id, String creatorId, Long specialistId, List<Long> specialistIds, String name, String description, List<String> categories, String location, String phoneNumber, String email) {
+    public ResponseMalfunction(Long id, String creatorId, Long specialistId, List<Long> specialistIds, String name, String description, List<String> categories, String location, String phoneNumber, String email, MalfunctionStatus status) {
         this.id = id;
         this.creatorId = creatorId;
         this.specialistId = specialistId;
@@ -111,6 +121,7 @@ public class ResponseMalfunction {
         this.location = location;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.status = status;
     }
 
     public static final ResponseMalfunctionBuilder builder = new ResponseMalfunctionBuilder();
@@ -127,6 +138,7 @@ public class ResponseMalfunction {
         private String location;
         private String phoneNumber;
         private String email;
+        private MalfunctionStatus status;
 
         public ResponseMalfunctionBuilder id(Long id){
             this.id = id;
@@ -147,9 +159,8 @@ public class ResponseMalfunction {
             return this;
         }
 
-        public ResponseMalfunctionBuilder specialistIds(List<SpecialistProfile> specialists) {
-            this.specialistIds = specialists.stream()
-                    .map(SpecialistProfile::getId).collect(Collectors.toList());
+        public ResponseMalfunctionBuilder specialistIds(List<Long> specialists) {
+            this.specialistIds = specialists;
             return this;
         }
 
@@ -183,6 +194,11 @@ public class ResponseMalfunction {
             return this;
         }
 
+        public ResponseMalfunctionBuilder status(MalfunctionStatus status) {
+            this.status = status;
+            return this;
+        }
+
         public ResponseMalfunction build() {
             return new ResponseMalfunction(id,
                     creatorId,
@@ -193,7 +209,8 @@ public class ResponseMalfunction {
                     categories,
                     location,
                     phoneNumber,
-                    email);
+                    email,
+                    status);
         }
     }
 
