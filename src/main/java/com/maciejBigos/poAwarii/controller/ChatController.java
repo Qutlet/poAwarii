@@ -1,30 +1,30 @@
 package com.maciejBigos.poAwarii.controller;
 
-import com.maciejBigos.poAwarii.model.Message;
-import org.springframework.messaging.converter.SimpleMessageConverter;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import com.maciejBigos.poAwarii.service.MessageService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
-@Component
-@Controller
 @CrossOrigin
+@RestController
+@RequestMapping("/messages")
 public class ChatController {
 
-    private final SimpMessagingTemplate messagingTemplate;
+    private final MessageService messageService;
 
-    public ChatController(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
-        this.messagingTemplate.setMessageConverter(new SimpleMessageConverter());
+    public ChatController(MessageService messageService) {
+        this.messageService = messageService;
     }
 
-    @MessageMapping("/message/{room}")
-    @SendTo("/topic/messages/{room}")
-    public Message sendMessage(final Message message) {
-        messagingTemplate.convertAndSend("/topic/messages/" + message.getRecipient(), message.toString().getBytes());
-        return message;
+    @PostMapping
+    public void sendMessage(@RequestParam String sender, @RequestParam String recipient,
+                            @RequestBody String content, Authentication authentication) {
+        messageService.sendMessage(sender, recipient, content);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getMessages(@RequestParam String sender, @RequestParam String recipient,
+                                         Authentication authentication) {
+        return ResponseEntity.ok(messageService.getMessages(sender, recipient));
     }
 }

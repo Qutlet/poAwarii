@@ -79,6 +79,7 @@ public class MalfunctionService {
                 .status(malfunction.getStatus())
                 .build()).collect(Collectors.toList());
     }
+
     public ResponseMalfunction getMalfunction(Long id){
         Malfunction malfunction = malfunctionRepository.findById(id).orElseThrow();
         return  ResponseMalfunction.builder
@@ -246,4 +247,61 @@ public class MalfunctionService {
                 .collect(Collectors.toList());
     }
 
+    public List<ResponseMalfunction> getAllSpecMalfunctionsP(Long specialistId) {
+        return malfunctionRepository.findAll().stream().map(malfunction -> ResponseMalfunction.builder
+                    .id(malfunction.getId())
+                    .creatorId(malfunction.getCreator())
+                    .name(malfunction.getName())
+                    .location(malfunction.getLocation())
+                    .description(malfunction.getDescription())
+                    .categories(malfunction.getCategories())
+                    .phoneNumber(malfunction.getPhoneNumber())
+                    .email(malfunction.getEmail())
+                    .specialistId(malfunction.getSpecialist())
+                    .specialistIds(malfunction.getSpecialists())
+                    .status(malfunction.getStatus())
+                    .build())
+                .filter(responseMalfunction -> responseMalfunction.getSpecialistIds()
+                        .contains(specialistId))
+                .filter(responseMalfunction -> responseMalfunction.getStatus() == MalfunctionStatus.PENDING)
+                .collect(Collectors.toList());
+    }
+
+    public List<ResponseMalfunction> getAllSpecMalfunctionsI(Long specialistId) {
+        return malfunctionRepository.findAll().stream().map(malfunction -> ResponseMalfunction.builder
+                        .id(malfunction.getId())
+                        .creatorId(malfunction.getCreator())
+                        .name(malfunction.getName())
+                        .location(malfunction.getLocation())
+                        .description(malfunction.getDescription())
+                        .categories(malfunction.getCategories())
+                        .phoneNumber(malfunction.getPhoneNumber())
+                        .email(malfunction.getEmail())
+                        .specialistId(malfunction.getSpecialist())
+                        .specialistIds(malfunction.getSpecialists())
+                        .status(malfunction.getStatus())
+                        .build())
+                .filter(responseMalfunction -> responseMalfunction.getStatus() == MalfunctionStatus.IN_WORK)
+                .filter(responseMalfunction -> responseMalfunction.getSpecialistId().equals(specialistId))
+                .collect(Collectors.toList());
+    }
+
+    public List<ResponseMalfunction> getAllSpecMalfunctionsE(Long specialistId) {
+        return malfunctionRepository.findAll().stream().map(malfunction -> ResponseMalfunction.builder
+                        .id(malfunction.getId())
+                        .creatorId(malfunction.getCreator())
+                        .name(malfunction.getName())
+                        .location(malfunction.getLocation())
+                        .description(malfunction.getDescription())
+                        .categories(malfunction.getCategories())
+                        .phoneNumber(malfunction.getPhoneNumber())
+                        .email(malfunction.getEmail())
+                        .specialistId(malfunction.getSpecialist())
+                        .specialistIds(malfunction.getSpecialists())
+                        .status(malfunction.getStatus())
+                        .build())
+                .filter(responseMalfunction -> responseMalfunction.getStatus() == MalfunctionStatus.ENDED)
+                .filter(responseMalfunction -> responseMalfunction.getSpecialistId().equals(specialistId))
+                .collect(Collectors.toList());
+    }
 }

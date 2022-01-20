@@ -1,12 +1,17 @@
 package com.maciejBigos.poAwarii.controller;
 
+import com.maciejBigos.poAwarii.model.enums.MalfunctionStatus;
 import com.maciejBigos.poAwarii.model.messeges.ResponseMalfunction;
+import com.maciejBigos.poAwarii.model.messeges.ResponseMessage;
+import com.maciejBigos.poAwarii.security.JsonWebToken;
 import com.maciejBigos.poAwarii.service.MalfunctionService;
 import com.maciejBigos.poAwarii.model.DTO.MalfunctionDTO;
 import com.maciejBigos.poAwarii.model.Malfunction;
 import com.maciejBigos.poAwarii.security.AuthenticationService;
 import com.maciejBigos.poAwarii.model.User;
 import com.maciejBigos.poAwarii.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +25,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @CrossOrigin
 @RestController
 public class MalfunctionController {
+
+    private static final Logger logger = LoggerFactory.getLogger(MalfunctionController.class);
 
     @Autowired
     private MalfunctionService malfunctionService;
@@ -146,6 +153,22 @@ public class MalfunctionController {
     @GetMapping("/malfunctions/user/{userId}")
     public ResponseEntity<?> getMalfunctionByUser(@PathVariable String userId, Authentication authentication) {
         return ResponseEntity.ok(malfunctionService.getAllUserMalfunction(userId));
+    }
+
+    @GetMapping("/malfunctions/specialist/{specialistId}")
+    public ResponseEntity<?> getMalfunctionBySpecialist(@PathVariable Long specialistId,
+                                                        @RequestParam(name = "status") MalfunctionStatus status,
+                                                        Authentication authentication) {
+        logger.info("Getting malfunctions by specialistId: " + specialistId + " and status: " + status);
+        switch (status) {
+            case ENDED:
+                return ResponseEntity.ok(malfunctionService.getAllSpecMalfunctionsE(specialistId));
+            case IN_WORK:
+                return ResponseEntity.ok(malfunctionService.getAllSpecMalfunctionsI(specialistId));
+            case PENDING:
+                return ResponseEntity.ok(malfunctionService.getAllSpecMalfunctionsP(specialistId));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 }

@@ -1,18 +1,40 @@
 package com.maciejBigos.poAwarii.model;
 
-import javax.persistence.Id;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity(name = "messages")
+@Table(indexes = {
+        @Index(name = "senderIndex" , columnList = "sender"),
+        @Index(name = "recipientIndex", columnList = "recipient")
+})
 public class Message {
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private Long id;
     private String content;
     private String sender;
     private String recipient;
     private final Date creationTime = new Date();
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Message(String content, String sender, String recipient) {
         this.content = content;
         this.sender = sender;
         this.recipient = recipient;
+    }
+
+    public Message() {
     }
 
     public String getContent() {
@@ -43,10 +65,6 @@ public class Message {
         return creationTime;
     }
 
-    /**
-     * returns string representation of a message
-     * @return
-     */
     @Override
     public String toString(){
         return "{\"Message\":{"
@@ -57,7 +75,4 @@ public class Message {
                 + "}}";
     }
 
-    public enum MessageType{
-        CHAT, LEAVE, JOIN
-    }
 }
