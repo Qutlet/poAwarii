@@ -14,17 +14,17 @@ public class Message {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private Long id;
+    private String id;
     private String content;
     private String sender;
     private String recipient;
     private final Date creationTime = new Date();
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
