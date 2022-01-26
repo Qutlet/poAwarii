@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -32,7 +33,14 @@ public class MessageService {
     }
 
     public List<Message> getMessages(String sender,String recipient) {
-            return messageRepository.findAllBySenderAndByRecipient(sender,recipient).sorted(Comparator.comparing(Message::getCreationTime)).collect(Collectors.toList());
+        Stream<Message> sentByUser = messageRepository.findAllBySenderAndByRecipient(sender,recipient);
+        Stream<Message> sentToUser = messageRepository.findAllBySenderAndByRecipient(recipient,sender);
+        Stream<Message> allMessage = Stream.concat(sentByUser,sentToUser);
+        return allMessage.sorted(Comparator.comparing(Message::getCreationTime)).collect(Collectors.toList());
+
+
+
+
     }
 
 }
