@@ -1,5 +1,6 @@
 package com.maciejBigos.poAwarii.controller;
 
+import com.maciejBigos.poAwarii.model.DTO.MessageDTO;
 import com.maciejBigos.poAwarii.service.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,8 +19,8 @@ public class ChatController {
 
     @PostMapping
     public void sendMessage(@RequestParam String sender, @RequestParam String recipient,
-                            @RequestBody String content, Authentication authentication) {
-        messageService.sendMessage(sender, recipient, content);
+                            @RequestBody MessageDTO content, Authentication authentication) {
+        messageService.sendMessage(sender, recipient, content.getMessage());
     }
 
     @GetMapping

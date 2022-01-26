@@ -6,12 +6,15 @@ import com.maciejBigos.poAwarii.repository.MessageRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class MessageService {
 
     private final MessageRepository messageRepository;
@@ -29,7 +32,7 @@ public class MessageService {
     }
 
     public List<Message> getMessages(String sender,String recipient) {
-            return messageRepository.findAllBySenderAndByRecipient(sender,recipient).collect(Collectors.toList());
+            return messageRepository.findAllBySenderAndByRecipient(sender,recipient).sorted(Comparator.comparing(Message::getCreationTime)).collect(Collectors.toList());
     }
 
 }
