@@ -38,6 +38,28 @@ public class SpecialistProfile {
         return photos;
     }
 
+    @OneToMany(mappedBy = "specialistProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Deadline> deadlineList;
+    @ElementCollection
+    private List<Boolean> deadlineConfig;
+    public List<Boolean> getDeadlineConfig() {
+        return deadlineConfig;
+    }
+
+    public void setDeadlineConfig(List<Boolean> deadlineConfig) {
+        this.deadlineConfig = deadlineConfig;
+    }
+
+
+
+    public List<Deadline> getDeadlineList() {
+        return deadlineList;
+    }
+
+    public void setDeadlineList(List<Deadline> deadlineList) {
+        this.deadlineList = deadlineList;
+    }
+
     public void setPhotos(List<String> photos) {
         this.photos = photos;
     }

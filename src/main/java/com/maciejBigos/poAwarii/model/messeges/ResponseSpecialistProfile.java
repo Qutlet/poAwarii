@@ -1,5 +1,6 @@
 package com.maciejBigos.poAwarii.model.messeges;
 
+import com.maciejBigos.poAwarii.model.Deadline;
 import com.maciejBigos.poAwarii.model.User;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class ResponseSpecialistProfile {
     private List<String> photos;
     private String location;
     private String description;
+    private List<Deadline> deadlineList;
 
     public String getUserPhoto() {
         return userPhoto;
@@ -115,7 +117,15 @@ public class ResponseSpecialistProfile {
         this.description = description;
     }
 
-    public ResponseSpecialistProfile(Long id, String userId, String customProfileName, List<String> categories, String firstName, String lastName, String email, String phoneNumber, String userPhoto, List<String> photos, String location, String description) {
+    public List<Deadline> getDeadlineList() {
+        return deadlineList;
+    }
+
+    public void setDeadlineList(List<Deadline> deadlineList) {
+        this.deadlineList = deadlineList;
+    }
+
+    public ResponseSpecialistProfile(Long id, String userId, String customProfileName, List<String> categories, String firstName, String lastName, String email, String phoneNumber, String userPhoto, List<String> photos, String location, String description, List<Deadline> deadlineList) {
         this.id = id;
         this.userId = userId;
         this.customProfileName = customProfileName;
@@ -128,6 +138,7 @@ public class ResponseSpecialistProfile {
         this.photos = photos;
         this.location = location;
         this.description = description;
+        this.deadlineList = deadlineList;
     }
 
     public static final ResponseSpecialistProfileBuilder builder = new ResponseSpecialistProfileBuilder();
@@ -145,6 +156,7 @@ public class ResponseSpecialistProfile {
         private String userPhoto;
         private String location;
         private String description;
+        private List<Deadline> deadlineList;
 
         public ResponseSpecialistProfileBuilder id(Long id) {
             this.id = id;
@@ -210,9 +222,14 @@ public class ResponseSpecialistProfile {
             return this;
         }
 
+        public ResponseSpecialistProfileBuilder deadlineList(List<Deadline> deadlineList) {
+            this.deadlineList = deadlineList;
+            return this;
+        }
+
         public ResponseSpecialistProfile build(){
             return new ResponseSpecialistProfile(id,userId,customProfileName,categories,firstName,lastName,
-                    email,phoneNumber,userPhoto,photos,location, description);
+                    email,phoneNumber,userPhoto,photos,location, description, deadlineList);
         }
     }
 }

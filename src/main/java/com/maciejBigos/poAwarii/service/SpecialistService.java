@@ -3,6 +3,7 @@ package com.maciejBigos.poAwarii.service;
 import com.maciejBigos.poAwarii.exceptions.UserAlreadyHaveRoleException;
 import com.maciejBigos.poAwarii.exceptions.UserIsNotSpecialistException;
 import com.maciejBigos.poAwarii.model.DTO.SpecialistProfileDTO;
+import com.maciejBigos.poAwarii.model.Deadline;
 import com.maciejBigos.poAwarii.model.SpecialistProfile;
 import com.maciejBigos.poAwarii.model.enums.RoleLevel;
 import com.maciejBigos.poAwarii.model.messeges.ResponseSpecialistProfile;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,6 +56,12 @@ public class SpecialistService {
         specialistProfile.setPhoneNumber(betterStringStrikesBack(user.getPhoneNumber(), specialistProfileDTO.getPhoneNumber()));
         specialistProfile.setLocation(specialistProfileDTO.getLocation());
         specialistProfile.setDescription(specialistProfileDTO.getDescription());
+        List<Deadline> deadlineList = new ArrayList<>(14);
+        for (int i = 0; i < 14; i++) {
+            deadlineList.add(new Deadline(LocalDateTime.now().plusDays(i),true, specialistProfileDTO.getDeadlinesDayUsage().get(i % 7)));
+        }
+        specialistProfile.setDeadlineList(deadlineList);
+        specialistProfile.setDeadlineConfig(specialistProfileDTO.getDeadlinesDayUsage());
         specialistRepository.save(specialistProfile);
         return ResponseSpecialistProfile.builder
                 .id(specialistProfile.getId())
@@ -68,11 +76,21 @@ public class SpecialistService {
                 .userPhoto(specialistProfile.getUser())
                 .location(specialistProfile.getLocation())
                 .description(specialistProfile.getDescription())
+                .deadlineList(specialistProfile.getDeadlineList())
                 .build();
     }
 
     public SpecialistProfile getRawSpecialistProfileById(Long id){
         return specialistRepository.findById(id).get();
+    }
+
+    public void takeDeadline(Long specialistId, int deadlineId, Long malfunctionId) {
+        SpecialistProfile specialistProfile = specialistRepository.findById(specialistId).get();
+        List<Deadline> tmp = specialistProfile.getDeadlineList();
+        tmp.get(deadlineId).setFree(false);
+        tmp.get(deadlineId).setMalfunctionId(malfunctionId);
+        specialistProfile.setDeadlineList(tmp);
+        specialistRepository.save(specialistProfile);
     }
 
     public SpecialistProfile getRawSpecialistProfileByUserId(String userId){
@@ -81,6 +99,7 @@ public class SpecialistService {
 
     public ResponseSpecialistProfile getSpecialistProfileByID(Long id){
         SpecialistProfile specialistProfile = specialistRepository.findById(id).orElseThrow();
+        System.out.println(specialistProfile.getDeadlineList());
         return ResponseSpecialistProfile.builder
                 .id(specialistProfile.getId())
                 .userId(specialistProfile.getUser())
@@ -94,6 +113,7 @@ public class SpecialistService {
                 .userPhoto(specialistProfile.getUser())
                 .location(specialistProfile.getLocation())
                 .description(specialistProfile.getDescription())
+                .deadlineList(specialistProfile.getDeadlineList())
                 .build();
     }
 
@@ -111,6 +131,7 @@ public class SpecialistService {
                 .userPhoto(specialistProfile.getUser())
                 .location(specialistProfile.getLocation())
                 .description(specialistProfile.getDescription())
+                .deadlineList(specialistProfile.getDeadlineList())
                 .build()).collect(Collectors.toList());
     }
 
@@ -135,6 +156,7 @@ public class SpecialistService {
                 .userPhoto(specialistProfile.getUser())
                 .location(specialistProfile.getLocation())
                 .description(specialistProfile.getDescription())
+                .deadlineList(specialistProfile.getDeadlineList())
                 .build()).collect(Collectors.toList());
     }
 
@@ -173,6 +195,7 @@ public class SpecialistService {
                 .userPhoto(specialistProfile.getUser())
                 .location(specialistProfile.getLocation())
                 .description(specialistProfile.getDescription())
+                .deadlineList(specialistProfile.getDeadlineList())
                 .build();
     }
 
@@ -197,6 +220,7 @@ public class SpecialistService {
                     .userPhoto(specialistProfile.getUser())
                     .location(specialistProfile.getLocation())
                     .description(specialistProfile.getDescription())
+                    .deadlineList(specialistProfile.getDeadlineList())
                     .build()).get();
         } catch (NoSuchElementException e) {
             throw new UserIsNotSpecialistException(userId);
