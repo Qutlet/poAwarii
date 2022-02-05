@@ -178,13 +178,15 @@ public class MalfunctionService {
                 .build();
     }
 
-    public ResponseMalfunction choseSpecialist(Long malfunctionID,  Long specialistID){ // akceptacja po rozmowie, rozpoczecie pracy specjalisty
+    public ResponseMalfunction choseSpecialist(Long malfunctionID, Long deadlineId){ // akceptacja po rozmowie, rozpoczecie pracy specjalisty
         Malfunction malfunction = malfunctionRepository.findById(malfunctionID).get();
         if (malfunction.getStatus() != MalfunctionStatus.PENDING) {
             //todo uneditable object
             //throw new
         }
-        SpecialistProfile specialistProfile = specialistService.getRawSpecialistProfileById(specialistID);
+
+        SpecialistProfile specialistProfile = specialistService.getIdByDeadlineId(deadlineId);
+        specialistService.takeDeadline(deadlineId,malfunctionID);
         malfunction.clearInterested().setSpecialist(specialistProfile);
         malfunction.setStatus(MalfunctionStatus.IN_WORK);
         malfunctionRepository.save(malfunction);
@@ -209,7 +211,9 @@ public class MalfunctionService {
             //todo uneditable object
             //throw new
         }
+        specialistService.freeDeadline(malfunctionID);
         malfunction.setStatus(MalfunctionStatus.ENDED);
+        malfunctionRepository.save(malfunction);
         //malfunctionRepository.deleteById(malfunctionID);
         //todo
         //return archiveMalfunctionRepository.save(malfunction);

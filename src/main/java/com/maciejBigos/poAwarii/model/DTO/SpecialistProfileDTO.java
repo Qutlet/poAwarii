@@ -19,6 +19,16 @@ public class SpecialistProfileDTO {
     private String location;
     private String description;
 
+    private List<Boolean> deadlinesDayUsage;
+
+    public List<Boolean> getDeadlinesDayUsage() {
+        return deadlinesDayUsage;
+    }
+
+    public void setDeadlinesDayUsage(List<Boolean> deadlinesDayUsage) {
+        this.deadlinesDayUsage = deadlinesDayUsage;
+    }
+
     public SpecialistProfileDTO(String customProfileName, List<String> categories, String firstName, String lastName, String email, String phoneNumber, String location, String description) {
         this.customProfileName = customProfileName;
         this.categories = categories;

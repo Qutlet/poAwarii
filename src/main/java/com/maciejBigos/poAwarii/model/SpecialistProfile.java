@@ -38,6 +38,26 @@ public class SpecialistProfile {
         return photos;
     }
 
+    @ElementCollection
+    public List<Long> deadlineIds = new ArrayList<>();
+    @ElementCollection
+    private List<Boolean> deadlineConfig;
+    public List<Boolean> getDeadlineConfig() {
+        return deadlineConfig;
+    }
+
+    public void setDeadlineConfig(List<Boolean> deadlineConfig) {
+        this.deadlineConfig = deadlineConfig;
+    }
+
+    public List<Long> getDeadlineIds() {
+        return deadlineIds;
+    }
+
+    public void setDeadlineIds(List<Long> deadlineIds) {
+        this.deadlineIds = deadlineIds;
+    }
+
     public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
@@ -135,5 +155,28 @@ public class SpecialistProfile {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean add(Long dId) {
+        return deadlineIds.add(dId);
+    }
+
+    @Override
+    public String toString() {
+        return "SpecialistProfile{" +
+                "id=" + id +
+                ", user=" + user +
+                ", customProfileName='" + customProfileName + '\'' +
+                ", categories=" + categories +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", photos=" + photos +
+                ", location='" + location + '\'' +
+                ", description='" + description + '\'' +
+                ", deadlineIds=" + deadlineIds +
+                ", deadlineConfig=" + deadlineConfig +
+                '}';
     }
 }

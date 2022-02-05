@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -12,4 +13,7 @@ public interface SpecialistRepository extends JpaRepository<SpecialistProfile, L
 
     @Query("select s from specialist_profile s where user_user_id = :userId")
     Optional<SpecialistProfile> findByUserId(String userId);
+
+    @Query("select s from specialist_profile s, IN (s.deadlineIds) d where d in (:dList)")
+    SpecialistProfile findByDeadlineIdsContainDeadlineId(List<Long> dList);
 }
