@@ -38,8 +38,8 @@ public class SpecialistProfile {
         return photos;
     }
 
-    @OneToMany(mappedBy = "specialistProfile", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<Deadline> deadlineList;
+    @ElementCollection
+    public List<Long> deadlineIds = new ArrayList<>();
     @ElementCollection
     private List<Boolean> deadlineConfig;
     public List<Boolean> getDeadlineConfig() {
@@ -50,14 +50,12 @@ public class SpecialistProfile {
         this.deadlineConfig = deadlineConfig;
     }
 
-
-
-    public List<Deadline> getDeadlineList() {
-        return deadlineList;
+    public List<Long> getDeadlineIds() {
+        return deadlineIds;
     }
 
-    public void setDeadlineList(List<Deadline> deadlineList) {
-        this.deadlineList = deadlineList;
+    public void setDeadlineIds(List<Long> deadlineIds) {
+        this.deadlineIds = deadlineIds;
     }
 
     public void setPhotos(List<String> photos) {
@@ -157,5 +155,28 @@ public class SpecialistProfile {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean add(Long dId) {
+        return deadlineIds.add(dId);
+    }
+
+    @Override
+    public String toString() {
+        return "SpecialistProfile{" +
+                "id=" + id +
+                ", user=" + user +
+                ", customProfileName='" + customProfileName + '\'' +
+                ", categories=" + categories +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", photos=" + photos +
+                ", location='" + location + '\'' +
+                ", description='" + description + '\'' +
+                ", deadlineIds=" + deadlineIds +
+                ", deadlineConfig=" + deadlineConfig +
+                '}';
     }
 }

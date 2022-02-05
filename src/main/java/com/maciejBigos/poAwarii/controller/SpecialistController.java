@@ -16,13 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -97,6 +93,11 @@ public class SpecialistController {
         } catch (UserIsNotSpecialistException e) {
             return ResponseEntity.ok(new ResponseMessage(e.getMessage()));
         }
+    }
+
+    @GetMapping("test/spec/{id}")
+    public List<Boolean> getTest(@PathVariable Long id) {
+        return specialistService.getRawSpecialistProfileById(id).getDeadlineConfig();
     }
 
 }

@@ -20,18 +20,6 @@ public class Deadline {
     private boolean isUsable;
     private Long malfunctionId;
 
-    @ManyToOne
-    @JoinColumn(name = "specialist_profile_specialist_profile_id")
-    private SpecialistProfile specialistProfile;
-
-    public SpecialistProfile getSpecialistProfile() {
-        return specialistProfile;
-    }
-
-    public void setSpecialistProfile(SpecialistProfile specialistProfile) {
-        this.specialistProfile = specialistProfile;
-    }
-
     public Long getId() {
         return id;
     }

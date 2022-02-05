@@ -122,10 +122,10 @@ public class MalfunctionController {
     /**
      * User accepting specialist as an executor
      */
-    @PutMapping(path = "/malfunctions/malfunction/{malfunctionID}/specialist/{specialistID}/chosen",produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> chooseSpecialist(@PathVariable Long malfunctionID, @PathVariable Long specialistID, @RequestParam int deadlineId, Authentication authentication){
+    @PutMapping(path = "/malfunctions/malfunction/{malfunctionID}/deadline/{deadlineId}/chosen",produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> chooseSpecialist(@PathVariable Long malfunctionID, @PathVariable Long deadlineId, Authentication authentication){
         if (authenticationService.checkOwnershipForMalfunction(malfunctionID,authentication)){
-            return ResponseEntity.ok(malfunctionService.choseSpecialist(malfunctionID, specialistID, deadlineId));
+            return ResponseEntity.ok(malfunctionService.choseSpecialist(malfunctionID, deadlineId));
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden action");
         }
