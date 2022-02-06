@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @Configuration
 @EnableScheduling
@@ -43,6 +44,9 @@ public class DeadlineConfig {
         List<SpecialistProfile> specialistProfileList = specialistRepository.findAll();
         for (SpecialistProfile specialistProfile : specialistProfileList) {
             logger.info(String.format("Upgrading deadlines for %s specialist", specialistProfile.getId()));
+            if (Objects.isNull(specialistProfile.getDeadlineConfig())) {
+                continue;
+            }
             boolean usage = specialistProfile.getDeadlineConfig().get(LocalDateTime.now().getDayOfWeek().getValue());
             List<Deadline> tmp = deadlineRepository.findAllById(specialistProfile.getDeadlineIds());
             tmp.sort(Comparator.comparing(Deadline::getDate));
