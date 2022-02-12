@@ -4,7 +4,7 @@ import com.maciejBigos.poAwarii.model.DTO.ChangePasswordDTO;
 import com.maciejBigos.poAwarii.model.DTO.UserDto;
 import com.maciejBigos.poAwarii.model.messeges.ResponseMessage;
 import com.maciejBigos.poAwarii.model.messeges.ResponseUser;
-import com.maciejBigos.poAwarii.security.AuthenticationService;
+import com.maciejBigos.poAwarii.security.AuthorizationService;
 import com.maciejBigos.poAwarii.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +24,13 @@ public class UserController {
 
     private final UserService userService;
 
-    private final AuthenticationService authenticationService;
+    private final AuthorizationService authorizationService;
 
     private AuthenticationManager authenticationManager;
 
-    public UserController(UserService userService, AuthenticationService authenticationService, AuthenticationManager authenticationManager) {
+    public UserController(UserService userService, AuthorizationService authorizationService, AuthenticationManager authenticationManager) {
         this.userService = userService;
-        this.authenticationService = authenticationService;
+        this.authorizationService = authorizationService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -57,7 +57,7 @@ public class UserController {
 
     @DeleteMapping(path = "/{userID}/delete")
     public ResponseEntity<?> deleteAccount(@PathVariable String userID, Authentication authentication){
-        if (authenticationService.isAdmin(authentication) || authenticationService.isAccountOwner(userID,authentication)){
+        if (authorizationService.isAdmin(authentication) || authorizationService.isAccountOwner(userID,authentication)){
             userService.deleteAccount(userID);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } else {
@@ -69,7 +69,7 @@ public class UserController {
     public ResponseEntity<ResponseMessage> editUser(@RequestParam(name = "userID") String userId,
                                       @RequestBody UserDto userDto,
                                       Authentication authentication) {
-        if (authenticationService.isAdmin(authentication) || authenticationService.isAccountOwner(userId, authentication)) {
+        if (authorizationService.isAdmin(authentication) || authorizationService.isAccountOwner(userId, authentication)) {
             ResponseMessage responseMessage = userService.editUser(userId, userDto);
             return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
         } else {
@@ -81,10 +81,10 @@ public class UserController {
     public ResponseEntity<ResponseMessage> changePassword(@RequestParam(name = "userID") String userId,
                                                           @RequestBody ChangePasswordDTO changePasswordDTO,
                                                           Authentication authentication) {
-        if (authenticationService.isAdmin(authentication)) {
+        if (authorizationService.isAdmin(authentication)) {
             ResponseMessage responseMessage = userService.changePassword(userId, changePasswordDTO.getPassword());
             return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
-        } else if (authenticationService.isAccountOwner(userId, authentication)) {
+        } else if (authorizationService.isAccountOwner(userId, authentication)) {
             Authentication tmpAuthentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authentication.getName(),changePasswordDTO.getOldPassword()));
             if (tmpAuthentication.isAuthenticated()) {
                 ResponseMessage responseMessage = userService.changePassword(userId, changePasswordDTO.getPassword());

@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-public class AuthenticationService {
+public class AuthorizationService {
 
     private final SpecialistRepository specialistRepository;
 
@@ -21,7 +21,7 @@ public class AuthenticationService {
 
     private final UserRepository userRepository;
 
-    public AuthenticationService(SpecialistRepository specialistRepository, MalfunctionRepository malfunctionRepository, UserRepository userRepository) {
+    public AuthorizationService(SpecialistRepository specialistRepository, MalfunctionRepository malfunctionRepository, UserRepository userRepository) {
         this.specialistRepository = specialistRepository;
         this.malfunctionRepository = malfunctionRepository;
         this.userRepository = userRepository;

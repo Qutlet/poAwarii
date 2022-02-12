@@ -52,6 +52,5 @@ public class LoginController {
             responseLogin = new ResponseLogin(generatedJsonWebToken, userService.getRoleLevel(user.getId()), user.getId(), (long) -1);
             return ResponseEntity.ok(responseLogin);
         }
-        //return ResponseEntity.ok(responseLogin);
     }
 }

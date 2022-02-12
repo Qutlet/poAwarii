@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SpecialistRepository extends JpaRepository<SpecialistProfile, Long> {
+public interface SpecialistRepository
+        extends JpaRepository<SpecialistProfile, Long> {
 
     @Query("select s from specialist_profile s where user_user_id = :userId")
     Optional<SpecialistProfile> findByUserId(String userId);
 
-    @Query("select s from specialist_profile s, IN (s.deadlineIds) d where d in (:dList)")
+    @Query("select s from specialist_profile s, IN (s.deadlineIds) d where " +
+            "d in (:dList)")
     SpecialistProfile findByDeadlineIdsContainDeadlineId(List<Long> dList);
 }

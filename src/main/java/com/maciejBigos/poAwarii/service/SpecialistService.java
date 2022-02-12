@@ -66,7 +66,6 @@ public class SpecialistService {
         specialistProfile.setLocation(specialistProfileDTO.getLocation());
         specialistProfile.setDescription(specialistProfileDTO.getDescription());
         for (int i = 0; i < 14; i++) {
-            System.out.println("i = " + i);
             Long savedId = makeDeadline(specialistProfileDTO.getDeadlinesDayUsage().get(i % 7), i);
             specialistProfile.add(savedId);
         }

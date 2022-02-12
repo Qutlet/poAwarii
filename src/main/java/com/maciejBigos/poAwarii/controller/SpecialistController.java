@@ -3,12 +3,11 @@ package com.maciejBigos.poAwarii.controller;
 import com.maciejBigos.poAwarii.exceptions.UserAlreadyHaveRoleException;
 import com.maciejBigos.poAwarii.exceptions.UserIsNotSpecialistException;
 import com.maciejBigos.poAwarii.model.DTO.SpecialistProfileDTO;
-import com.maciejBigos.poAwarii.model.SpecialistProfile;
 import com.maciejBigos.poAwarii.model.enums.RoleLevel;
 import com.maciejBigos.poAwarii.model.messeges.ResponseMessage;
 import com.maciejBigos.poAwarii.model.messeges.ResponseSpecialistProfile;
 import com.maciejBigos.poAwarii.service.RoleService;
-import com.maciejBigos.poAwarii.security.AuthenticationService;
+import com.maciejBigos.poAwarii.security.AuthorizationService;
 import com.maciejBigos.poAwarii.service.SpecialistService;
 import com.maciejBigos.poAwarii.service.UserService;
 
@@ -30,7 +29,7 @@ public class SpecialistController {
     private SpecialistService specialistService;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private AuthorizationService authorizationService;
 
     @Autowired
     private UserService userService;
@@ -67,7 +66,7 @@ public class SpecialistController {
 
     @PutMapping(path = "specProfile/{id}/edit",consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editSpecialistProfile(@PathVariable Long id,@RequestBody SpecialistProfileDTO specialistProfileDTO, Authentication authentication) {
-        if (authenticationService.isAdmin(authentication) || authenticationService.confirmOwnershipForSpecialistProfile(id,authentication)) {
+        if (authorizationService.isAdmin(authentication) || authorizationService.confirmOwnershipForSpecialistProfile(id,authentication)) {
             ResponseSpecialistProfile specialistProfile = specialistService.update(id,specialistProfileDTO);
             return ResponseEntity.ok(specialistProfile);
         } else {
@@ -77,7 +76,7 @@ public class SpecialistController {
 
     @DeleteMapping(path = "specProfile/{id}/delete/{userID}")
     public ResponseEntity<?> deleteSpecialistProfile(@PathVariable Long id, @PathVariable String userID, Authentication authentication){
-        if(authenticationService.confirmOwnershipForSpecialistProfile(id,authentication)){
+        if(authorizationService.confirmOwnershipForSpecialistProfile(id,authentication)){
             specialistService.deleteSpecialistProfile(id);
             roleService.removeRoleFromUser(userID,RoleLevel.SPEC);
             return ResponseEntity.ok().build();

@@ -2,12 +2,9 @@ package com.maciejBigos.poAwarii.controller;
 
 import com.maciejBigos.poAwarii.model.enums.MalfunctionStatus;
 import com.maciejBigos.poAwarii.model.messeges.ResponseMalfunction;
-import com.maciejBigos.poAwarii.model.messeges.ResponseMessage;
-import com.maciejBigos.poAwarii.security.JsonWebToken;
 import com.maciejBigos.poAwarii.service.MalfunctionService;
 import com.maciejBigos.poAwarii.model.DTO.MalfunctionDTO;
-import com.maciejBigos.poAwarii.model.Malfunction;
-import com.maciejBigos.poAwarii.security.AuthenticationService;
+import com.maciejBigos.poAwarii.security.AuthorizationService;
 import com.maciejBigos.poAwarii.model.User;
 import com.maciejBigos.poAwarii.service.UserService;
 import org.slf4j.Logger;
@@ -32,7 +29,7 @@ public class MalfunctionController {
     private MalfunctionService malfunctionService;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private AuthorizationService authorizationService;
 
     @Autowired
     private UserService userService;
@@ -52,7 +49,7 @@ public class MalfunctionController {
 
     @GetMapping(path = "/malfunctions/all", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMalfunctions(Authentication authentication){
-        if (authenticationService.isAdmin(authentication) || authenticationService.isSpec(authentication)){
+        if (authorizationService.isAdmin(authentication) || authorizationService.isSpec(authentication)){
             final List<ResponseMalfunction> malfunctions = malfunctionService.getAllMalfunctions();
             return ResponseEntity.ok(malfunctions);
         }else {
@@ -62,7 +59,7 @@ public class MalfunctionController {
 
     @GetMapping(path = "/malfunctions/{id}/malfunction", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMalfunction> getMalfunction(@PathVariable Long id, Authentication authentication) {
-        if (authenticationService.isAdmin(authentication) || authenticationService.isSpec(authentication) || authenticationService.checkOwnershipForMalfunction(id, authentication)){
+        if (authorizationService.isAdmin(authentication) || authorizationService.isSpec(authentication) || authorizationService.checkOwnershipForMalfunction(id, authentication)){
             final ResponseMalfunction malfunction = malfunctionService.getMalfunction(id);
             return ResponseEntity.ok(malfunction);
         } else {
@@ -73,7 +70,7 @@ public class MalfunctionController {
 
     @PutMapping(path = "/malfunctions/{id}/edit", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMalfunction> editMalfunction(@RequestBody MalfunctionDTO malfunctionDTO,@PathVariable Long id, Authentication authentication) {
-        if (authenticationService.isAdmin(authentication)|| authenticationService.checkOwnershipForMalfunction(id,authentication)){
+        if (authorizationService.isAdmin(authentication)|| authorizationService.checkOwnershipForMalfunction(id,authentication)){
             ResponseMalfunction malfunction = malfunctionService.editMalfunction(malfunctionDTO,id);
             return ResponseEntity.ok(malfunction);
         } else {
@@ -84,7 +81,7 @@ public class MalfunctionController {
 
     @DeleteMapping(path = "/malfunctions/{id}/delete", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteMalfunction(@PathVariable Long id,Authentication authentication) {
-        if (authenticationService.checkOwnershipForMalfunction(id,authentication)) {
+        if (authorizationService.checkOwnershipForMalfunction(id,authentication)) {
             malfunctionService.deleteMalfunction(id);
             return ResponseEntity.ok("Malfunction deleted successfully");
         } else {
@@ -97,7 +94,7 @@ public class MalfunctionController {
      */
     @PutMapping(path = "/malfunctions/malfunction/{malfunctionID}/specialist/interested",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addInterestedSpecialist(@PathVariable Long malfunctionID, Authentication authentication){
-        if (authenticationService.isAdmin(authentication) || authenticationService.isSpec(authentication) || authenticationService.checkOwnershipForMalfunction(malfunctionID,authentication)){
+        if (authorizationService.isAdmin(authentication) || authorizationService.isSpec(authentication) || authorizationService.checkOwnershipForMalfunction(malfunctionID,authentication)){
             String userId = userService.getMe(authentication.getName()).getId();
             final ResponseMalfunction malfunction =  malfunctionService.addInterestedSpecialist(malfunctionID,userId);
             return ResponseEntity.ok(malfunction);
@@ -111,7 +108,7 @@ public class MalfunctionController {
      */
     @PutMapping(path = "/malfunctions/malfunction/{malfunctionID}/specialist/{specialistID}/uninterested", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> removeInterestedSpecialist(@PathVariable Long malfunctionID, @PathVariable Long specialistID, Authentication authentication){
-        if (authenticationService.isAdmin(authentication) || authenticationService.isSpec(authentication) || authenticationService.checkOwnershipForMalfunction(malfunctionID,authentication)){
+        if (authorizationService.isAdmin(authentication) || authorizationService.isSpec(authentication) || authorizationService.checkOwnershipForMalfunction(malfunctionID,authentication)){
             final ResponseMalfunction malfunction = malfunctionService.removeInterestedSpecialist(malfunctionID,specialistID);
             return ResponseEntity.ok(malfunction);
         } else {
@@ -124,7 +121,7 @@ public class MalfunctionController {
      */
     @PutMapping(path = "/malfunctions/malfunction/{malfunctionID}/deadline/{deadlineId}/chosen",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> chooseSpecialist(@PathVariable Long malfunctionID, @PathVariable Long deadlineId, Authentication authentication){
-        if (authenticationService.checkOwnershipForMalfunction(malfunctionID,authentication)){
+        if (authorizationService.checkOwnershipForMalfunction(malfunctionID,authentication)){
             return ResponseEntity.ok(malfunctionService.choseSpecialist(malfunctionID, deadlineId));
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden action");
@@ -133,7 +130,7 @@ public class MalfunctionController {
 
     @PutMapping(path = "/malfunctions/malfunction/{malfunctionID}/workEnded",produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> workEnded(@PathVariable Long malfunctionID, Authentication authentication){ //todo this only successful end of work, add unsuccessful
-        if (authenticationService.checkOwnershipForMalfunction(malfunctionID,authentication)){
+        if (authorizationService.checkOwnershipForMalfunction(malfunctionID,authentication)){
             return ResponseEntity.ok(malfunctionService.workIsDone(malfunctionID));
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden action");
