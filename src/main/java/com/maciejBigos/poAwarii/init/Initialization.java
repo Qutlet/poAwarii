@@ -16,8 +16,7 @@ public class Initialization {
 
     @PostConstruct
     public void init(){
-        //UserDto userDto = new UserDto("Administrator","PoAwarii","dupa8","dupa8","maciej.bigos@hycom.pl");
-        //registrationController.register(userDto);
+
     }
 
 }
